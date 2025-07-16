@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ShopService {
@@ -31,6 +32,12 @@ public class ShopService {
                 StateOfDelivery.PROCESSING);
 
         return orderRepo.addOrder(newOrder);
+    }
+
+    public List<Order> getOrdersOfState (StateOfDelivery stateOfDelivery) {
+        return orderRepo.getOrders().stream()
+                .filter(order -> order.state().equals(stateOfDelivery))
+                .toList();
     }
 
     public String toString(){
