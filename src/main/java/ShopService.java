@@ -2,8 +2,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ShopService {
@@ -13,19 +13,19 @@ public class ShopService {
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
-            Product productToOrder = productRepo.getProductById(productId);
-            if (productToOrder == null) {
+            Optional<Product> productToOrder = productRepo.getProductById(productId);
+            if (productToOrder.isEmpty()) {
                 System.out.println("Product mit der Id: " + productId + " konnte nicht bestellt werden!");
                 // Falls die Bestellung insgesamt scheitert, müssen Produkte, die bereits aus dem Store entfernt wurden,
                 // dem Store wieder hinzugefügt werden.
                 for (Product productToRestore: products) {
                     productRepo.addProduct(productToRestore);
                 }
-                return null;
+                throw new ProductNotStoredException("Product with ID: " + productId + " not stored!");
             }
             // Für jedes Mal, dass das Produkt Teil der Bestellung ist, wird es aus dem Store entfernt.
             productRepo.removeProduct(productId);
-            products.add(productToOrder);
+            products.add(productToOrder.get());
         }
 
         Order newOrder = new Order(UUID.randomUUID().toString(), products,
