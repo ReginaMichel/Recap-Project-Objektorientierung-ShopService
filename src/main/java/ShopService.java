@@ -1,5 +1,6 @@
 import lombok.RequiredArgsConstructor;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,9 @@ public class ShopService {
         }
 
         Order newOrder = new Order(UUID.randomUUID().toString(), products,
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.now(),
+                Instant.now());
 
         return orderRepo.addOrder(newOrder);
     }
@@ -42,7 +45,8 @@ public class ShopService {
 
     public void updateOrder(String orderID, StateOfDelivery newStateOfDelivery) {
         Order updatedOrder = orderRepo.getOrderById(orderID)
-                .withState(newStateOfDelivery);
+                .withState(newStateOfDelivery)
+                .withLastUpdate(Instant.now());
         orderRepo.removeOrder(orderID);
         orderRepo.addOrder(updatedOrder);
     }

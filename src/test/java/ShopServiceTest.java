@@ -2,6 +2,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +30,30 @@ class ShopServiceTest {
         productRepo.addProduct(apple);
         orderMapRepo = new OrderMapRepo();
         products = productRepo.getProducts();
-        order11 = new Order("11", products, StateOfDelivery.PROCESSING);
-        order12 = new Order("12", products, StateOfDelivery.PROCESSING);
-        order21 = new Order("21", products, StateOfDelivery.IN_DELIVERY);
-        order22 = new Order("22", products, StateOfDelivery.IN_DELIVERY);
-        order23 = new Order("23", products, StateOfDelivery.IN_DELIVERY);
-        order31 = new Order("31", products, StateOfDelivery.COMPLETED);
-        order32 = new Order("32", products, StateOfDelivery.COMPLETED);
-        order33 = new Order("33", products, StateOfDelivery.COMPLETED);
+        order11 = new Order("11", products, StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order12 = new Order("12", products, StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order21 = new Order("21", products, StateOfDelivery.IN_DELIVERY,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order22 = new Order("22", products, StateOfDelivery.IN_DELIVERY,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order23 = new Order("23", products, StateOfDelivery.IN_DELIVERY,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order31 = new Order("31", products, StateOfDelivery.COMPLETED,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order32 = new Order("32", products, StateOfDelivery.COMPLETED,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
+        order33 = new Order("33", products, StateOfDelivery.COMPLETED,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
         orderMapRepo.addOrder(order11);
         orderMapRepo.addOrder(order12);
         orderMapRepo.addOrder(order21);
@@ -63,7 +80,9 @@ class ShopServiceTest {
         //THEN
         Order expected = new Order("-1",
                 List.of(new Product("1", "Apfel")),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
         assertEquals(expected.products(), actual.products());
         assertNotNull(expected.id());
     }
@@ -124,5 +143,15 @@ class ShopServiceTest {
         shopService.updateOrder("11", StateOfDelivery.IN_DELIVERY);
         assertEquals(StateOfDelivery.IN_DELIVERY,
                 orderMapRepo.getOrderById("11").state());
+    }
+
+    @Test
+    void updateOrder_changesTimestamp() {
+        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        Instant oldTimestamp = orderMapRepo.getOrderById("11").lastUpdate();
+        shopService.updateOrder("11", StateOfDelivery.IN_DELIVERY);
+        Instant newTimestamp = orderMapRepo.getOrderById("11").lastUpdate();
+        assertNotEquals(oldTimestamp, newTimestamp);
+        assertTrue(newTimestamp.isAfter(oldTimestamp));
     }
 }

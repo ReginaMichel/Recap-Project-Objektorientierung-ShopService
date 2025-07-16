@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ class OrderListRepoTest {
 
         Product product = new Product("1", "Apfel");
         Order newOrder = new Order("1", List.of(product),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
         repo.addOrder(newOrder);
 
         //WHEN
@@ -29,7 +32,9 @@ class OrderListRepoTest {
         List<Order> expected = new ArrayList<>();
         Product product1 = new Product("1", "Apfel");
         expected.add(new Order("1", List.of(product1),
-                StateOfDelivery.PROCESSING));
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z")));
 
         assertEquals(actual, expected);
     }
@@ -41,7 +46,9 @@ class OrderListRepoTest {
 
         Product product = new Product("1", "Apfel");
         Order newOrder = new Order("1", List.of(product),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
         repo.addOrder(newOrder);
 
         //WHEN
@@ -50,7 +57,9 @@ class OrderListRepoTest {
         //THEN
         Product product1 = new Product("1", "Apfel");
         Order expected = new Order("1", List.of(product1),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
 
         assertEquals(actual, expected);
     }
@@ -61,7 +70,9 @@ class OrderListRepoTest {
         OrderListRepo repo = new OrderListRepo();
         Product product = new Product("1", "Apfel");
         Order newOrder = new Order("1", List.of(product),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
 
         //WHEN
         Order actual = repo.addOrder(newOrder);
@@ -69,7 +80,9 @@ class OrderListRepoTest {
         //THEN
         Product product1 = new Product("1", "Apfel");
         Order expected = new Order("1", List.of(product1),
-                StateOfDelivery.PROCESSING);
+                StateOfDelivery.PROCESSING,
+                Instant.parse("2025-01-01T01:01:01.00Z"),
+                Instant.parse("2025-01-01T01:01:01.00Z"));
         assertEquals(actual, expected);
         assertEquals(repo.getOrderById("1"), expected);
     }
