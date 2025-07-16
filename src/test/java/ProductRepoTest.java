@@ -1,3 +1,6 @@
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,10 +10,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductRepoTest {
 
+    Product apple;
+
+    @BeforeEach
+    void setUp() {
+        apple = new Product("1", "Apfel");
+    }
+
+    @AfterEach
+    void tearDown() {
+    }
+
     @org.junit.jupiter.api.Test
     void getProducts() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        repo.addProduct(apple);
 
         //WHEN
         List<Product> actual = repo.getProducts();
@@ -25,6 +40,7 @@ class ProductRepoTest {
     void getProductById() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        repo.addProduct(apple);
 
         //WHEN
         Product actual = repo.getProductById("1");
@@ -53,6 +69,7 @@ class ProductRepoTest {
     void removeProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
+        repo.addProduct(apple);
 
         //WHEN
         repo.removeProduct("1");

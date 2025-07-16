@@ -1,12 +1,15 @@
+import lombok.ToString;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 public class ProductRepo {
     private List<Product> products;
 
     public ProductRepo() {
         products = new ArrayList<>();
-        products.add(new Product("1", "Apfel"));
+        //products.add(new Product("1", "Apfel"));
     }
 
     public List<Product> getProducts() {
