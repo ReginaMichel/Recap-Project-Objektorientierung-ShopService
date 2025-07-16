@@ -1,5 +1,3 @@
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
@@ -19,8 +17,15 @@ public class ShopService {
             Product productToOrder = productRepo.getProductById(productId);
             if (productToOrder == null) {
                 System.out.println("Product mit der Id: " + productId + " konnte nicht bestellt werden!");
+                // Falls die Bestellung insgesamt scheitert, müssen Produkte, die bereits aus dem Store entfernt wurden,
+                // dem Store wieder hinzugefügt werden.
+                for (Product productToRestore: products) {
+                    productRepo.addProduct(productToRestore);
+                }
                 return null;
             }
+            // Für jedes Mal, dass das Produkt Teil der Bestellung ist, wird es aus dem Store entfernt.
+            productRepo.removeProduct(productId);
             products.add(productToOrder);
         }
 
