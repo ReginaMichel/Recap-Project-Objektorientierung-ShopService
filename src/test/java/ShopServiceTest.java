@@ -117,4 +117,12 @@ class ShopServiceTest {
             assertTrue(actual.contains(order));
         }
     }
+
+    @Test
+    void updateOrder_toIN_DELIVERY() {
+        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        shopService.updateOrder("11", StateOfDelivery.IN_DELIVERY);
+        assertEquals(StateOfDelivery.IN_DELIVERY,
+                orderMapRepo.getOrderById("11").state());
+    }
 }
