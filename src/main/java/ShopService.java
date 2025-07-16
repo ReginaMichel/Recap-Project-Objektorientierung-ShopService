@@ -1,12 +1,11 @@
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@ToString
 public class ShopService {
     private final ProductRepo productRepo;// = new ProductRepo();
     private final OrderRepo orderRepo;// = new OrderMapRepo();
@@ -33,5 +32,19 @@ public class ShopService {
                 StateOfDelivery.PROCESSING);
 
         return orderRepo.addOrder(newOrder);
+    }
+
+    public List<Order> getOrdersOfState (StateOfDelivery stateOfDelivery) {
+        return orderRepo.getOrders().stream()
+                .filter(order -> order.state().equals(stateOfDelivery))
+                .toList();
+    }
+
+    public String toString(){
+        return "\nShopService to String:\n" +
+                "Product store contains:\n" +
+                productRepo.toString() + "\n" +
+                "List of orders:\n" +
+                orderRepo.toString();
     }
 }
