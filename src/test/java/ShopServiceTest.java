@@ -69,16 +69,18 @@ class ShopServiceTest {
     }
 
     @Test
-    void addOrderTest_whenInvalidProductId_expectNull() {
+    void addOrderTest_whenInvalidProductId_expectException() {
         //GIVEN
         ShopService shopService = new ShopService(productRepo, new OrderMapRepo());
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
-        Order actual = shopService.addOrder(productsIds);
-
-        //THEN
-        assertNull(actual);
+        try {
+            shopService.addOrder(productsIds);
+        } catch(ProductNotStoredException e) {
+            //THEN
+            assertEquals("Product with ID: 2 not stored!", e.getMessage());
+        }
     }
 
     @Test

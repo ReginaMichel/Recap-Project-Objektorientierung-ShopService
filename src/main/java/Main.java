@@ -22,15 +22,20 @@ public class Main {
         List<String> order1 = new ArrayList<>();
         order1.add("1");
         order1.add("1");
-        shopService.addOrder(order1);
         List<String> order2 = new ArrayList<>();
         order2.add("2");
         order2.add("3");
-        shopService.addOrder(order2);
         List<String> order3 = new ArrayList<>();
         order3.add("2");
-        shopService.addOrder(order3);
-
+        order3.add("1");
+        try {
+            shopService.addOrder(order1);
+            shopService.addOrder(order2);
+            shopService.addOrder(order3);
+        } catch (ProductNotStoredException e) {
+            System.out.println("One of the orders could not be added and an " +
+                    "ProductNotStoredException was thrown.");
+        }
         System.out.println(shopService);
     }
 }
