@@ -4,12 +4,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 public class ShopService {
     private final ProductRepo productRepo;// = new ProductRepo();
     private final OrderRepo orderRepo;// = new OrderMapRepo();
+    private final IdService idService;
 
     public Order addOrder(List<String> productIds) {
         List<Product> products = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ShopService {
             products.add(productToOrder.get());
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products,
+        Order newOrder = new Order(idService.generateId().toString(), products,
                 StateOfDelivery.PROCESSING,
                 Instant.now(),
                 Instant.now());

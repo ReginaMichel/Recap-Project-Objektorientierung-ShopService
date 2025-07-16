@@ -22,6 +22,7 @@ class ShopServiceTest {
     Order order31;
     Order order32;
     Order order33;
+    IdService idService;
 
     @BeforeEach
     void setUp() {
@@ -62,6 +63,7 @@ class ShopServiceTest {
         orderMapRepo.addOrder(order31);
         orderMapRepo.addOrder(order32);
         orderMapRepo.addOrder(order33);
+        idService = new IdService();
     }
 
     @AfterEach
@@ -71,7 +73,8 @@ class ShopServiceTest {
     @Test
     void addOrderTest() {
         //GIVEN
-        ShopService shopService = new ShopService(productRepo, new OrderMapRepo());
+        ShopService shopService = new ShopService(productRepo, new OrderMapRepo(),
+                idService);
         List<String> productsIds = List.of("1");
 
         //WHEN
@@ -90,7 +93,8 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectException() {
         //GIVEN
-        ShopService shopService = new ShopService(productRepo, new OrderMapRepo());
+        ShopService shopService = new ShopService(productRepo, new OrderMapRepo(),
+                idService);
         List<String> productsIds = List.of("1", "2");
 
         //WHEN
@@ -104,7 +108,8 @@ class ShopServiceTest {
 
     @Test
     void getOrdersOfState_PROCESSING() {
-        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        ShopService shopService = new ShopService(productRepo, orderMapRepo,
+                idService);
         assertEquals(2,
                 shopService.getOrdersOfState(StateOfDelivery.PROCESSING).size());
         List<Order> expected = new ArrayList<>();
@@ -121,7 +126,8 @@ class ShopServiceTest {
 
     @Test
     void getOrdersOfState_COMPLETED() {
-        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        ShopService shopService = new ShopService(productRepo, orderMapRepo,
+                idService);
         assertEquals(3,
                 shopService.getOrdersOfState(StateOfDelivery.COMPLETED).size());
         List<Order> expected = new ArrayList<>();
@@ -139,7 +145,8 @@ class ShopServiceTest {
 
     @Test
     void updateOrder_toIN_DELIVERY() {
-        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        ShopService shopService = new ShopService(productRepo, orderMapRepo,
+                idService);
         shopService.updateOrder("11", StateOfDelivery.IN_DELIVERY);
         assertEquals(StateOfDelivery.IN_DELIVERY,
                 orderMapRepo.getOrderById("11").state());
@@ -147,7 +154,8 @@ class ShopServiceTest {
 
     @Test
     void updateOrder_changesTimestamp() {
-        ShopService shopService = new ShopService(productRepo, orderMapRepo);
+        ShopService shopService = new ShopService(productRepo, orderMapRepo,
+                idService);
         Instant oldTimestamp = orderMapRepo.getOrderById("11").lastUpdate();
         shopService.updateOrder("11", StateOfDelivery.IN_DELIVERY);
         Instant newTimestamp = orderMapRepo.getOrderById("11").lastUpdate();

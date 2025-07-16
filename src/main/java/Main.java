@@ -17,8 +17,9 @@ public class Main {
         }
 
         OrderRepo orderRepo = new OrderMapRepo();
+        IdService idService = new IdService();
 
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        ShopService shopService = new ShopService(productRepo, orderRepo, idService);
         List<String> order1 = new ArrayList<>();
         order1.add("1");
         List<String> order2 = new ArrayList<>();
