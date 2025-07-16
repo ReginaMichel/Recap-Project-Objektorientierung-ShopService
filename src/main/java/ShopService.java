@@ -40,6 +40,13 @@ public class ShopService {
                 .toList();
     }
 
+    public void updateOrder(String orderID, StateOfDelivery newStateOfDelivery) {
+        Order updatedOrder = orderRepo.getOrderById(orderID)
+                .withState(newStateOfDelivery);
+        orderRepo.removeOrder(orderID);
+        orderRepo.addOrder(updatedOrder);
+    }
+
     public String toString(){
         return "\nShopService to String:\n" +
                 "Product store contains:\n" +
